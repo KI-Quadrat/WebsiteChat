@@ -8,8 +8,11 @@
 <body>
     <h1>Welcome to Website Chat</h1>
 
+    <div id="app"></div>
+    <!-- <script src="./web.js"></script> -->
+
     <script type="module">
-        import Chatbot from 'https://cdn.jsdelivr.net/gh/KI-Quadrat/WebsiteChat@latest/dist/web.js';
+        import Chatbot from './web.js';
         Chatbot.init({
             chatflowid: '5b9ae7a7-5837-4cbb-84a1-a46707e2bd4f',
             apiHost: 'https://api.ai2.at',
