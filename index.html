@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Website Chat</title>
+</head>
+
+<body>
+    <h1>Welcome to Website Chat</h1>
+
+    <script type="module">
+        import Chatbot from 'https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js';
+        Chatbot.init({
+            chatflowid: '<chatflowid>',
+            apiHost: 'http://localhost:3000',
+        });
+    </script>
+</body>
+
+</html>

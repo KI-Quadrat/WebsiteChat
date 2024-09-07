@@ -38,9 +38,7 @@ export const Bubble = (props: BubbleProps) => {
     setIsBotStarted(false);
   });
 
-  const buttonSize = getBubbleButtonSize(props.theme?.button?.size); // Default to 48px if size is not provided
-  const buttonBottom = props.theme?.button?.bottom ?? 20;
-  const chatWindowBottom = buttonBottom + buttonSize + 10; // Adjust the offset here for slight shift
+  const buttonSize = getBubbleButtonSize(props.theme?.button?.size);
 
   // Add viewport meta tag dynamically
   createEffect(() => {
@@ -66,7 +64,7 @@ export const Bubble = (props: BubbleProps) => {
         tooltipMessage={bubbleProps.theme?.tooltip?.tooltipMessage}
         tooltipBackgroundColor={bubbleProps.theme?.tooltip?.tooltipBackgroundColor}
         tooltipTextColor={bubbleProps.theme?.tooltip?.tooltipTextColor}
-        tooltipFontSize={bubbleProps.theme?.tooltip?.tooltipFontSize} // Set the tooltip font size
+        tooltipFontSize={bubbleProps.theme?.tooltip?.tooltipFontSize}
       />
       <BubbleButton
         {...bubbleProps.theme?.button}
@@ -78,14 +76,34 @@ export const Bubble = (props: BubbleProps) => {
         openDelay={bubbleProps.theme?.button?.autoWindowOpen?.openDelay}
         autoOpenOnMobile={bubbleProps.theme?.button?.autoWindowOpen?.autoOpenOnMobile ?? false}
       />
+      {/* Blurred background */}
+      <Show when={isBotOpened()}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            'background-color': 'rgba(0, 0, 0, 0.5)',
+            'backdrop-filter': 'blur(5px)',
+            'z-index': 42424241,
+          }}
+          onClick={closeBot}
+        />
+      </Show>
       <div
         part="bot"
         style={{
-          height: bubbleProps.theme?.chatWindow?.height ? `${bubbleProps.theme?.chatWindow?.height.toString()}px` : 'calc(100% - 150px)',
-          width: bubbleProps.theme?.chatWindow?.width ? `${bubbleProps.theme?.chatWindow?.width.toString()}px` : undefined,
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: isBotOpened() ? 'translate(-50%, -50%) scale3d(1, 1, 1)' : 'translate(-50%, -50%) scale3d(0, 0, 1)',
+          height: '80vh',
+          width: '80vw',
+          'max-width': '600px',
+          'max-height': '800px',
           transition: 'transform 200ms cubic-bezier(0, 1.2, 1, 1), opacity 150ms ease-out',
-          'transform-origin': 'bottom right',
-          transform: isBotOpened() ? 'scale3d(1, 1, 1)' : 'scale3d(0, 0, 1)',
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           'background-color': bubbleProps.theme?.chatWindow?.backgroundColor || '#ffffff',
           'background-image': bubbleProps.theme?.chatWindow?.backgroundImage ? `url(${bubbleProps.theme?.chatWindow?.backgroundImage})` : 'none',
@@ -93,22 +111,15 @@ export const Bubble = (props: BubbleProps) => {
           'background-position': 'center',
           'background-repeat': 'no-repeat',
           'z-index': 42424242,
-          bottom: `${Math.min(buttonPosition().bottom + buttonSize + 10, window.innerHeight - chatWindowBottom)}px`,
-          right: `${Math.min(buttonPosition().right, window.innerWidth - 410)}px`,
         }}
-        class={
-          `fixed sm:right-5 rounded-lg w-full sm:w-[400px] max-h-[704px]` +
-          (isBotOpened() ? ' opacity-1' : ' opacity-0 pointer-events-none') +
-          ` bottom-${chatWindowBottom}px`
-        }
+        class={`rounded-lg ${isBotOpened() ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}
       >
         <Show when={isBotStarted()}>
           <div class="relative h-full">
             <Show when={isBotOpened()}>
-              {/* Cross button For only mobile screen use this <Show when={isBotOpened() && window.innerWidth <= 640}>  */}
               <button
                 onClick={closeBot}
-                class="py-2 pr-3 absolute top-0 right-[-8px] m-[6px] bg-transparent text-white rounded-full z-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75"
+                class="absolute top-2 right-2 m-[6px] bg-transparent text-white rounded-full z-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75"
                 title="Close Chat"
               >
                 <svg viewBox="0 0 24 24" width="24" height="24">
