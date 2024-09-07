@@ -5,6 +5,7 @@ import { BubbleParams } from '../types';
 import { Bot, BotProps } from '../../../components/Bot';
 import Tooltip from './Tooltip';
 import { getBubbleButtonSize } from '@/utils';
+import { Send, Upload, X } from 'lucide-react';
 
 const defaultButtonColor = '#3B81F6';
 const defaultIconColor = 'white';
@@ -40,7 +41,6 @@ export const Bubble = (props: BubbleProps) => {
 
   const buttonSize = getBubbleButtonSize(props.theme?.button?.size);
 
-  // Add viewport meta tag dynamically
   createEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
@@ -76,89 +76,88 @@ export const Bubble = (props: BubbleProps) => {
         openDelay={bubbleProps.theme?.button?.autoWindowOpen?.openDelay}
         autoOpenOnMobile={bubbleProps.theme?.button?.autoWindowOpen?.autoOpenOnMobile ?? false}
       />
-      {/* Blurred background */}
       <Show when={isBotOpened()}>
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            'background-color': 'rgba(0, 0, 0, 0.5)',
-            'backdrop-filter': 'blur(5px)',
-            'z-index': 42424241,
-          }}
-          onClick={closeBot}
-        />
-      </Show>
-      <div
-        part="bot"
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: isBotOpened() ? 'translate(-50%, -50%) scale3d(1, 1, 1)' : 'translate(-50%, -50%) scale3d(0, 0, 1)',
-          height: '80vh',
-          width: '80vw',
-          'max-width': '600px',
-          'max-height': '800px',
-          transition: 'transform 200ms cubic-bezier(0, 1.2, 1, 1), opacity 150ms ease-out',
-          'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
-          'background-color': bubbleProps.theme?.chatWindow?.backgroundColor || '#ffffff',
-          'background-image': bubbleProps.theme?.chatWindow?.backgroundImage ? `url(${bubbleProps.theme?.chatWindow?.backgroundImage})` : 'none',
-          'background-size': 'cover',
-          'background-position': 'center',
-          'background-repeat': 'no-repeat',
-          'z-index': 42424242,
-        }}
-        class={`rounded-lg ${isBotOpened() ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}
-      >
-        <Show when={isBotStarted()}>
-          <div class="relative h-full">
-            <Show when={isBotOpened()}>
-              <button
-                onClick={closeBot}
-                class="absolute top-2 right-2 m-[6px] bg-transparent text-white rounded-full z-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:brightness-100 transition-all filter hover:brightness-90 active:brightness-75"
-                title="Close Chat"
-              >
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                  <path
-                    fill={bubbleProps.theme?.button?.iconColor ?? defaultIconColor}
-                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-lg w-full h-full md:w-[70%] md:h-[70%] flex flex-col">
+            {/* Header */}
+            <div class="flex justify-between items-center p-4 bg-gray-800">
+              <div class="md:hidden text-white text-2xl font-bold">
+                <span class="block">KI²</span>
+                <span class="block text-sm">KI QUADRAT</span>
+              </div>
+              <div class="text-xl font-bold hidden md:block">Wiener Neudorf</div>
+              <div class="flex items-center space-x-2">
+                <button class="text-sm bg-gray-700 px-2 py-1 rounded hidden md:block">Send Transcript</button>
+                <button class="text-lg hidden md:block">A</button>
+                <button class="text-xl font-bold hidden md:block">A</button>
+                <button class="md:hidden" onClick={closeBot}>
+                  <X size={24} />
+                </button>
+              </div>
+            </div>
+            {/* Main Content */}
+            <div class="flex-grow flex overflow-hidden">
+              {/* Left Panel (hidden on mobile) */}
+              <div class="w-1/4 bg-gray-900 hidden md:flex flex-col">
+                <div class="p-4">
+                  <div class="text-white text-2xl font-bold">
+                    <span class="block">KI²</span>
+                    <span class="block text-sm">KI QUADRAT</span>
+                  </div>
+                </div>
+              </div>
+              {/* Right Panel */}
+              <div class="flex-grow flex flex-col overflow-hidden md:border-l md:border-gray-800">
+                <div class="flex-grow overflow-y-auto p-4">
+                  <Bot
+                    badgeBackgroundColor={bubbleProps.theme?.chatWindow?.backgroundColor}
+                    bubbleBackgroundColor={bubbleProps.theme?.button?.backgroundColor ?? defaultButtonColor}
+                    bubbleTextColor={bubbleProps.theme?.button?.iconColor ?? defaultIconColor}
+                    showTitle={false}
+                    showAgentMessages={bubbleProps.theme?.chatWindow?.showAgentMessages}
+                    welcomeMessage={bubbleProps.theme?.chatWindow?.welcomeMessage}
+                    errorMessage={bubbleProps.theme?.chatWindow?.errorMessage}
+                    poweredByTextColor={bubbleProps.theme?.chatWindow?.poweredByTextColor}
+                    textInput={bubbleProps.theme?.chatWindow?.textInput}
+                    botMessage={bubbleProps.theme?.chatWindow?.botMessage}
+                    userMessage={bubbleProps.theme?.chatWindow?.userMessage}
+                    feedback={bubbleProps.theme?.chatWindow?.feedback}
+                    fontSize={bubbleProps.theme?.chatWindow?.fontSize}
+                    footer={bubbleProps.theme?.chatWindow?.footer}
+                    starterPrompts={bubbleProps.theme?.chatWindow?.starterPrompts}
+                    starterPromptFontSize={bubbleProps.theme?.chatWindow?.starterPromptFontSize}
+                    chatflowid={props.chatflowid}
+                    chatflowConfig={props.chatflowConfig}
+                    apiHost={props.apiHost}
+                    onRequest={props.onRequest}
+                    observersConfig={props.observersConfig}
+                    clearChatOnReload={bubbleProps.theme?.chatWindow?.clearChatOnReload}
                   />
-                </svg>
-              </button>
-            </Show>
-            <Bot
-              badgeBackgroundColor={bubbleProps.theme?.chatWindow?.backgroundColor}
-              bubbleBackgroundColor={bubbleProps.theme?.button?.backgroundColor ?? defaultButtonColor}
-              bubbleTextColor={bubbleProps.theme?.button?.iconColor ?? defaultIconColor}
-              showTitle={bubbleProps.theme?.chatWindow?.showTitle}
-              showAgentMessages={bubbleProps.theme?.chatWindow?.showAgentMessages}
-              title={bubbleProps.theme?.chatWindow?.title}
-              titleAvatarSrc={bubbleProps.theme?.chatWindow?.titleAvatarSrc}
-              welcomeMessage={bubbleProps.theme?.chatWindow?.welcomeMessage}
-              errorMessage={bubbleProps.theme?.chatWindow?.errorMessage}
-              poweredByTextColor={bubbleProps.theme?.chatWindow?.poweredByTextColor}
-              textInput={bubbleProps.theme?.chatWindow?.textInput}
-              botMessage={bubbleProps.theme?.chatWindow?.botMessage}
-              userMessage={bubbleProps.theme?.chatWindow?.userMessage}
-              feedback={bubbleProps.theme?.chatWindow?.feedback}
-              fontSize={bubbleProps.theme?.chatWindow?.fontSize}
-              footer={bubbleProps.theme?.chatWindow?.footer}
-              starterPrompts={bubbleProps.theme?.chatWindow?.starterPrompts}
-              starterPromptFontSize={bubbleProps.theme?.chatWindow?.starterPromptFontSize}
-              chatflowid={props.chatflowid}
-              chatflowConfig={props.chatflowConfig}
-              apiHost={props.apiHost}
-              onRequest={props.onRequest}
-              observersConfig={props.observersConfig}
-              clearChatOnReload={bubbleProps.theme?.chatWindow?.clearChatOnReload}
-            />
+                </div>
+                <div class="p-4">
+                  <div class="flex items-center bg-gray-800 rounded-lg">
+                    <input 
+                      type="text" 
+                      placeholder="Wie darf ich ihnen helfen?" 
+                      class="flex-grow bg-transparent p-3 outline-none text-sm"
+                    />
+                    <button class="p-3">
+                      <Upload size={20} />
+                    </button>
+                    <button class="p-3">
+                      <Send size={20} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Footer */}
+            <div class="p-2 text-center text-sm text-gray-500">
+              Powered by KI QUADRAT
+            </div>
           </div>
-        </Show>
-      </div>
+        </div>
+      </Show>
     </>
   );
 };
