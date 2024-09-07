@@ -30,7 +30,7 @@ yarn build
 
 ```html
 <script type="module">
-  import Chatbot from 'https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js';
+  import Chatbot from 'https://cdn.jsdelivr.net/gh/KI-Quadrat/WebsiteChat@latest/dist/web.js';
   Chatbot.init({
     chatflowid: '<chatflowid>',
     apiHost: 'http://localhost:3000',

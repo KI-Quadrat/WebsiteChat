@@ -136,11 +136,7 @@ export const Bubble = (props: BubbleProps) => {
                 </div>
                 <div class="p-4">
                   <div class="flex items-center bg-gray-800 rounded-lg">
-                    <input 
-                      type="text" 
-                      placeholder="Wie darf ich ihnen helfen?" 
-                      class="flex-grow bg-transparent p-3 outline-none text-sm"
-                    />
+                    <input type="text" placeholder="Wie darf ich ihnen helfen?" class="flex-grow bg-transparent p-3 outline-none text-sm" />
                     <button class="p-3">
                       <Upload size={20} />
                     </button>
@@ -152,9 +148,7 @@ export const Bubble = (props: BubbleProps) => {
               </div>
             </div>
             {/* Footer */}
-            <div class="p-2 text-center text-sm text-gray-500">
-              Powered by KI QUADRAT
-            </div>
+            <div class="p-2 text-center text-sm text-gray-500">Powered by KI QUADRAT</div>
           </div>
         </div>
       </Show>
